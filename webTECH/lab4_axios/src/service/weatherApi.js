@@ -2,7 +2,6 @@ import axios from "axios";
 
 axios.defaults.baseURL = "http://api.openweathermap.org";
 const appidDefault = "8322956a2fe976317c52f1ea622a56f2";
-const appidWeather = "1f607f4508efb28d5bae55a9be5ae5a4";
 
 export const getGeo = async (name) => {
   const result = await axios.get("/geo/1.0/direct", {
@@ -15,18 +14,34 @@ export const getGeo = async (name) => {
   };
 };
 
-export const getFCurrent = async ({ lat, lon }) => {
+export const getCurrent = async ({ lat, lon }) => {
   const result = await axios.get("/data/2.5/weather", {
     params: { lat, lon, appid: appidDefault, units: "metric" },
   });
-  return result;
+  return result.data;
 };
 
 export const getForecast = async ({ lat, lon }) => {
-  const result = await axios.get("/data/2.5/forecast/daily", {
-    params: { lat, lon, appid: appidWeather, units: "metric", cnt: 7 },
+  const result = await axios.get("/data/2.5/forecast", {
+    params: { lat, lon, appid: appidDefault, units: "metric" },
   });
-  return result;
+
+  const arr = result.data.list.reduce((acc, item) => {
+    const itemDate = new Date(item.dt_txt);
+    if (itemDate.getDate() === new Date(Date.now()).getDate()) {
+      return acc;
+    }
+    if (acc.length === 0) {
+      acc.push(item);
+      return acc;
+    }
+    const lastDate = new Date(acc[acc.length - 1].dt_txt);
+    if (itemDate.getDate() !== lastDate.getDate()) {
+      acc.push(item);
+    }
+    return acc;
+  }, []);
+  return arr;
 };
 
 export const getIconUrl = (icon) => {
