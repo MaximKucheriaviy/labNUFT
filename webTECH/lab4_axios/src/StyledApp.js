@@ -1,15 +1,18 @@
 import styled from "styled-components";
 
-export const StyledCurrentWeather = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  grid-column-gap: 10px;
+const MainBlock = styled.div`
   width: 800px;
   border: 4px solid gray;
   border-radius: 10px;
   margin-left: auto;
   margin-right: auto;
   padding: 10px;
+`;
+
+export const StyledCurrentWeather = styled(MainBlock)`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-column-gap: 10px;
 `;
 
 export const StyledMainWeather = styled.div`
@@ -92,5 +95,14 @@ export const StyledInfoCatds = styled.div`
       font-size: 16px;
       color: gray;
     }
+  }
+`;
+
+export const ButtonDiv = styled.div`
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  & button {
+    flex-grow: 1;
   }
 `;

@@ -10,6 +10,7 @@ import {
   StyledMainWeather,
   StyledSearchForm,
   StyledInfoCatds,
+  ButtonDiv,
 } from "./StyledApp";
 import { Card } from "./components/Card";
 import { FaTemperatureThreeQuarters } from "react-icons/fa6";
@@ -18,6 +19,8 @@ import { WiHumidity } from "react-icons/wi";
 import { WiRaindrops } from "react-icons/wi";
 import { WiSunrise } from "react-icons/wi";
 import { WiSunset } from "react-icons/wi";
+import { TbPlayerTrackPrevFilled } from "react-icons/tb";
+import { TbPlayerTrackNextFilled } from "react-icons/tb";
 
 const isRain = (weather) => {
   return Object.keys(weather).includes("rain");
@@ -39,18 +42,37 @@ function App() {
   const [findCity, setFindCity] = useState("");
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
+  const [current, setCurrent] = useState(0);
   const onSubmit = async () => {
     try {
       const geoData = await getGeo(city);
-      const weather = await getCurrent(geoData);
       const forecast = await getForecast(geoData);
+      const weather = await getCurrent(geoData);
       console.log(weather);
+
+      forecast.unshift(weather);
       setWeather(weather);
+      setCurrent(0);
       setForecast(forecast);
       setFindCity(city);
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const onNext = () => {
+    if (current + 1 >= forecast.length) {
+      return;
+    }
+    setWeather(forecast[current + 1]);
+    setCurrent((prev) => prev + 1);
+  };
+  const onPrev = () => {
+    if (current <= 0) {
+      return;
+    }
+    setWeather(forecast[current - 1]);
+    setCurrent((prev) => prev - 1);
   };
   return (
     <div className="App">
@@ -60,6 +82,9 @@ function App() {
             <p>Enter ciny name</p>
           ) : (
             <>
+              <p className="date">
+                {new Date(weather.dt * 1000).toLocaleDateString()}
+              </p>
               <p className="name">{findCity}</p>
               <img
                 src={getIconUrl(weather.weather[0].icon)}
@@ -86,51 +111,77 @@ function App() {
             ></input>
           </StyledSearchForm>
           {weather && (
-            <StyledInfoCatds>
-              <Card
-                name={"Feels like"}
-                value={Math.ceil(weather.main.feels_like)}
-                sp="°C"
-                Icon={FaTemperatureThreeQuarters}
-                color={"orange"}
-                customSpan={false}
-              />
-              <Card
-                name={"Wind"}
-                value={weather.wind.speed}
-                sp="m/s"
-                Icon={LuWind}
-                color={"blue"}
-              />
-              <Card
-                name={"Humidity"}
-                value={weather.main.humidity}
-                sp="%"
-                Icon={WiHumidity}
-                color={"blue"}
-              />
-              <Card
-                name={"Rain"}
-                value={isRain(weather) ? weather.rain["1h"] : "N/A"}
-                sp=" mm"
-                Icon={WiRaindrops}
-                color={"blue"}
-              />
-              <Card
-                name={"Sunrise"}
-                value={formatAMPM(new Date(weather.sys.sunrise)).strTime}
-                sp={` ${formatAMPM(new Date(weather.sys.sunrise)).ampm}`}
-                Icon={WiSunrise}
-                color={"orange"}
-              />
-              <Card
-                name={"Sunset"}
-                value={formatAMPM(new Date(weather.sys.sunset)).strTime}
-                sp={` ${formatAMPM(new Date(weather.sys.sunset)).ampm}`}
-                Icon={WiSunset}
-                color={"orange"}
-              />
-            </StyledInfoCatds>
+            <div>
+              <StyledInfoCatds>
+                <Card
+                  name={"Feels like"}
+                  value={Math.ceil(weather.main.feels_like)}
+                  sp="°C"
+                  Icon={FaTemperatureThreeQuarters}
+                  color={"orange"}
+                  customSpan={false}
+                />
+                <Card
+                  name={"Wind"}
+                  value={weather.wind.speed}
+                  sp="m/s"
+                  Icon={LuWind}
+                  color={"blue"}
+                />
+                <Card
+                  name={"Humidity"}
+                  value={weather.main.humidity}
+                  sp="%"
+                  Icon={WiHumidity}
+                  color={"blue"}
+                />
+                <Card
+                  name={"Rain"}
+                  value={isRain(weather) ? weather.rain["1h"] : "N/A"}
+                  sp=" mm"
+                  Icon={WiRaindrops}
+                  color={"blue"}
+                />
+                <Card
+                  name={"Sunrise"}
+                  value={
+                    current === 0
+                      ? formatAMPM(new Date(weather.sys.sunrise)).strTime
+                      : ""
+                  }
+                  sp={` ${
+                    current === 0
+                      ? formatAMPM(new Date(weather.sys.sunrise)).ampm
+                      : ""
+                  }`}
+                  Icon={WiSunrise}
+                  color={"orange"}
+                />
+                <Card
+                  name={"Sunset"}
+                  value={
+                    current === 0
+                      ? formatAMPM(new Date(weather.sys.sunset)).strTime
+                      : ""
+                  }
+                  sp={` ${
+                    current === 0
+                      ? formatAMPM(new Date(weather.sys.sunset)).ampm
+                      : ""
+                  }`}
+                  Icon={WiSunset}
+                  color={"orange"}
+                />
+              </StyledInfoCatds>
+              <ButtonDiv>
+                <button onClick={onPrev} className="controlButton">
+                  <TbPlayerTrackPrevFilled />
+                </button>
+                <button onClick={onNext} className="controlButton">
+                  <TbPlayerTrackNextFilled />
+                </button>
+              </ButtonDiv>
+            </div>
           )}
         </div>
       </StyledCurrentWeather>
