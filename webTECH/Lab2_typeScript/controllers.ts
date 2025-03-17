@@ -23,10 +23,8 @@ export const namesController = async (req: Request, res: Response) => {
       throw new Error(result.status.toString());
     }
     const responseArr = (await result.json()) as personResponse;
-    const response = responseArr
-      .map((item: Person) => `${item.name} ${item.phoneNumber} ${item.email}`)
-      .join("<br>");
-    res.status(200).send(response);
+
+    res.status(200).json(responseArr);
   } catch (err: any) {
     console.log(err);
 

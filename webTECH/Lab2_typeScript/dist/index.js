@@ -1,7 +1,9 @@
+import cors from "cors";
 import express from "express";
 import { helloController, namesController, fruitController, } from "./controllers.js";
 const server = express();
-const port = 3000;
+const port = 3001;
+server.use(cors());
 server.get("/hello", helloController);
 server.get("/API/names", namesController);
 server.get("/fruit", fruitController);

@@ -24,10 +24,7 @@ export const namesController = (req, res) => __awaiter(void 0, void 0, void 0, f
             throw new Error(result.status.toString());
         }
         const responseArr = (yield result.json());
-        const response = responseArr
-            .map((item) => `${item.name} ${item.phoneNumber} ${item.email}`)
-            .join("<br>");
-        res.status(200).send(response);
+        res.status(200).json(responseArr);
     }
     catch (err) {
         console.log(err);
