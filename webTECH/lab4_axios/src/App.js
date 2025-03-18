@@ -79,7 +79,7 @@ function App() {
       <StyledCurrentWeather>
         <StyledMainWeather>
           {weather === null ? (
-            <p>Enter ciny name</p>
+            <p>Enter city name</p>
           ) : (
             <>
               <p className="date">
