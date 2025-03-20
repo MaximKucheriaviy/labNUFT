@@ -16,7 +16,13 @@ code {
     monospace;
 }
 
-image {
+img {
   width: 100%;
   height: auto;
+}
+h1,
+h2,
+p {
+  margin: 0;
+  padding: 0;
 }
