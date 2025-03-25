@@ -1,18 +1,29 @@
 import { StyledCard } from "./StyledCard";
 import { useState } from "react";
+import { useEffect } from "react";
 
-export const Card = ({ info }) => {
+export const Card = ({ info, activeCity, setActiveCity }) => {
   const [active, setActive] = useState(false);
-
+  const date = new Date(Date.now() + (info.timerZone - 2) * 3600000);
+  useEffect(() => {
+    if (activeCity === info.name) {
+      setActive(true);
+    } else {
+      setActive(false);
+    }
+  }, [activeCity, info.name]);
   return (
-    <StyledCard onClick={() => setActive(!active)}>
-      <div className={`back ${active ? "active" : ""}`}>
-        <p>{info.phoneNumber}</p>
-        <p>{info.email}</p>
+    <StyledCard
+      onClick={() => {
+        setActiveCity(info.name);
+      }}
+      active={active ? 1 : 0}
+    >
+      <p className="name">{info.name}</p>
+      <div className="imageThumb">
+        <img src={info.imageLink} alt="flag" />
       </div>
-      <div className={`front ${active ? "active" : ""}`}>
-        <p>{info.name}</p>
-      </div>
+      <p className="timer">{date.toLocaleString("ru-RU")}</p>
     </StyledCard>
   );
 };

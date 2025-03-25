@@ -5,16 +5,10 @@ export default function Home() {
     <>
       <ul>
         <li>
-          <Link href={"/"}>Hello</Link>
+          <Link href={"/time"}>time</Link>
         </li>
         <li>
-          <Link href={"/"}>Fruit</Link>
-        </li>
-        <li>
-          <Link href={"/"}>People</Link>
-        </li>
-        <li>
-          <Link href={"/"}>Weather</Link>
+          <Link href={"/weather"}>Weather</Link>
         </li>
       </ul>
     </>
