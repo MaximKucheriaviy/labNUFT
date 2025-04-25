@@ -8,51 +8,50 @@ print("Кучерявий Максим КН-1-3М лабораторна 2")
 revieves = mr.fileids()
 random.shuffle(revieves)
 
-
-#......oб'єднання унікальний слів у файл
-# wordslis = []
-
-# for revieve in revieves:
-#     words = mr.words(revieve)
-#     for word in words:
-#         if word not in wordslis:
-#             wordslis.append(word.lower())
-
-# file = open("./words.txt", 'w')
-# file.write(" ".join(wordslis))
-
+myWord = "logical"
+nCount = 2900
+fileName = "pos/cv010_29198.txt"
 
 
 wordslist = []
+
 
 for revieve in revieves:
     words = mr.words(revieve)
     for word in words:
         wordslist.append(word)
 
+frqList = nltk.FreqDist(wordslist)
 
-frqList = nltk.probability.FreqDist(wordslist)
-wordsFrq = []
+print("20 most commmon: ")
+print(frqList.most_common(20))
+print('\n')
+
+print("frequency of", myWord, frqList[myWord] )
+print('\n')
+
+nCountWordsList = frqList.most_common(nCount)
 
 
-file = open("./words.txt")
-uniqueWordslist = file.read()
-uniqueWordslist = uniqueWordslist.split()
-
-frqList = nltk.probability.FreqDist(wordslist)
-wordsFrq = []
-
-
-for word in uniqueWordslist:
-    wordsFrq.append({
-        'word': word,
-        'frq': frqList[word]
-    })
-
-wordsFrq.sort(key=lambda x: (-x['frq']))
-print(wordsFrq[:20])
+def isWordInText(wordsList, revName):
+    fileWords = mr.words(revName)
+    obj = {}
+    for word in wordsList:
+        obj[word[0]] = word[0] in fileWords
+    return obj
 
 
 
 
 
+usedWords = isWordInText(nCountWordsList, fileName)
+
+trueWords = []
+
+for word in usedWords.keys():
+    if usedWords[word] == True:
+        trueWords.append(word)
+
+
+print(trueWords)
+print(len(trueWords))
