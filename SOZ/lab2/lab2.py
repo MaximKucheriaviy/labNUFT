@@ -37,10 +37,11 @@ print('\n')
 
 
 def isWordInText(wordsList, revName):
-    fileWords = revWrods[revName]
+    fileWords = set(w.lower() for w in revWrods[revName])
     obj = {}
     for word in wordsList:
-        obj[word[0]] = word[0] in fileWords
+        w = word[0].lower()
+        obj[w] = w in fileWords
     return obj
 
 
@@ -63,10 +64,10 @@ print('\n')
 
 
 trainModel = []
+testSet = []
 count = 0
 
 for rev in revieves[:1800]:
-    print(rev, count)
     count += 1
     trainModel.append((isWordInText(nCountWordsList, rev), mr.categories(rev)[0]))
 
@@ -74,6 +75,11 @@ for rev in revieves[:1800]:
 print("start of training")
 classifier = nltk.classify.NaiveBayesClassifier.train(trainModel)
 print("end of training")
-testSet = revieves[1800:]
 
-# nltk.classify.accuracy(classifier, testSet)
+for rev in revieves[1800:]:
+    count += 1
+    testSet.append((isWordInText(nCountWordsList, rev), mr.categories(rev)[0]))
+
+
+print("accuracy", nltk.classify.accuracy(classifier, testSet))
+print(classifier.show_most_informative_features(20))
