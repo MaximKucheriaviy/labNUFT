@@ -5,19 +5,22 @@ from nltk.corpus import movie_reviews as mr
 print("Кучерявий Максим КН-1-3М лабораторна 2")
 
 #............................. списо відгуків з перемінуванням
-revieves = mr.fileids()
-random.shuffle(revieves)
 
 myWord = "logical"
 nCount = 2900
 fileName = "pos/cv010_29198.txt"
 
+revieves = mr.fileids()
+revWrods = {}
+
+random.shuffle(revieves)
 
 wordslist = []
 
 
 for revieve in revieves:
     words = mr.words(revieve)
+    revWrods[revieve] = words
     for word in words:
         wordslist.append(word)
 
@@ -30,11 +33,11 @@ print('\n')
 print("frequency of", myWord, frqList[myWord] )
 print('\n')
 
-nCountWordsList = frqList.most_common(nCount)
+
 
 
 def isWordInText(wordsList, revName):
-    fileWords = mr.words(revName)
+    fileWords = revWrods[revName]
     obj = {}
     for word in wordsList:
         obj[word[0]] = word[0] in fileWords
@@ -42,16 +45,35 @@ def isWordInText(wordsList, revName):
 
 
 
-
-
+nCountWordsList = frqList.most_common(nCount)
 usedWords = isWordInText(nCountWordsList, fileName)
-
 trueWords = []
+
+
 
 for word in usedWords.keys():
     if usedWords[word] == True:
         trueWords.append(word)
 
-
+print("most common used words in", fileName)
 print(trueWords)
-print(len(trueWords))
+print('\n')
+
+
+
+
+trainModel = []
+count = 0
+
+for rev in revieves[:1800]:
+    print(rev, count)
+    count += 1
+    trainModel.append((isWordInText(nCountWordsList, rev), mr.categories(rev)[0]))
+
+
+print("start of training")
+classifier = nltk.classify.NaiveBayesClassifier.train(trainModel)
+print("end of training")
+testSet = revieves[1800:]
+
+# nltk.classify.accuracy(classifier, testSet)
