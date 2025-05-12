@@ -1,0 +1,165 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Приклад Next.js - OpenAPI 3.x",
+    "description": " Приклад API з додатка Next.js ",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "http://localhost:3000/api/" }],
+  "paths": {
+    "/v1/weather/{zipcode}": {
+      "get": {
+        "summary": " Отримати погоду за поштовим індексом ",
+        "parameters": [
+          {
+            "name": "zipcode",
+            "in": "path",
+            "description": " Поштовий індекс розташування у вигляді рядка.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 96815
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " Успішна операція ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/weatherDetailType"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": " Оновити запис по погоди по індексу ",
+        "parameters": [
+          {
+            "name": "zipcode",
+            "in": "path",
+            "description": " Поштовий індекс розташування у вигляді рядка.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 96815
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email"],
+                "properties": {
+                  "weather": {
+                    "type": "string",
+                    "example": "suny"
+                  },
+                  "temp": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 35
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Weather created"
+          }
+        }
+      },
+      "delete": {
+        "summary": " Видалити запис за поштовим індексом ",
+        "parameters": [
+          {
+            "name": "zipcode",
+            "in": "path",
+            "description": " Поштовий індекс розташування у вигляді рядка.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": 96815
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " Успішна операція "
+          }
+        }
+      }
+    },
+    "/v1/weather/": {
+      "post": {
+        "summary": " Створити запис про погоди за індексом ",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email"],
+                "properties": {
+                  "zipcode": {
+                    "type": "string",
+                    "example": "12345"
+                  },
+                  "weather": {
+                    "type": "string",
+                    "example": "suny"
+                  },
+                  "temp": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 35
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Weather created"
+          },
+          "400": {
+            "description": "Wrong data"
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "weatherDetailType": {
+        "type": "object",
+        "properties": {
+          "zipcode": {
+            "type": "string",
+            "example": 96815
+          },
+          "weather": {
+            "type": "string",
+            "example": "sunny"
+          },
+          "temp": {
+            "type": "integer",
+            "format": "int64",
+            "example": 35
+          }
+        }
+      }
+    }
+  }
+}
